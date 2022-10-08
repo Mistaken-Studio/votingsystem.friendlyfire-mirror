@@ -16,7 +16,9 @@ namespace Mistaken.VotingSystem.FriendlyFire
         [Description("If true, then debug will be displayed")]
         public bool VerbouseOutput { get; set; }
 
-        [Description("If set, then this endpoint will be used for sending data for analytics")]
-        public string EndpointForAnalytics { get; set; }
+        [Description("Analytics settings")]
+        public string AnalyticsLogin { get; set; }
+
+        public string AnalyticsPassword { get; set; }
     }
 }

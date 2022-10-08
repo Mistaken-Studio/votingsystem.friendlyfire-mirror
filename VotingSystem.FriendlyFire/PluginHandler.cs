@@ -5,12 +5,15 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using Exiled.API.Enums;
 using Exiled.API.Features;
+using HarmonyLib;
+using Mistaken.Updater.API.Config;
 
 namespace Mistaken.VotingSystem.FriendlyFire
 {
-    internal sealed class PluginHandler : Plugin<Config, Translations>
+    internal sealed class PluginHandler : Plugin<Config, Translations>, IAutoUpdateablePlugin
     {
         public override string Author => "Mistaken Devs";
 
@@ -22,12 +25,20 @@ namespace Mistaken.VotingSystem.FriendlyFire
 
         public override Version RequiredExiledVersion => new (5, 2, 2);
 
+        public AutoUpdateConfig AutoUpdateConfig => new ()
+        {
+            Type = SourceType.GITLAB,
+            Url = "https://git.mistaken.pl/api/v4/projects/115",
+        };
+
         public override void OnEnabled()
         {
             Instance = this;
 
             harmony = new HarmonyLib.Harmony("com.votingsystem.friendlyfire.patch");
             harmony.PatchAll();
+
+            Mistaken.Events.Handlers.CustomEvents.LoadedPlugins += this.CustomEvents_LoadedPlugins;
 
             new VotingHandler(this);
 
@@ -40,6 +51,8 @@ namespace Mistaken.VotingSystem.FriendlyFire
         {
             harmony.UnpatchAll();
 
+            Mistaken.Events.Handlers.CustomEvents.LoadedPlugins -= this.CustomEvents_LoadedPlugins;
+
             API.Diagnostics.Module.OnDisable(this);
 
             base.OnDisabled();
@@ -47,6 +60,15 @@ namespace Mistaken.VotingSystem.FriendlyFire
 
         internal static PluginHandler Instance { get; private set; }
 
+        internal static Mistaken.API.Diagnostics.Module AtksModule { get; private set; }
+
         private static HarmonyLib.Harmony harmony;
+
+        private void CustomEvents_LoadedPlugins()
+        {
+            var type = AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes()).FirstOrDefault(x => x.FullName == "Mistaken.AntyTeamKillSystem.AntyTeamkillHandler");
+            if (type is not null)
+                AtksModule = (Mistaken.API.Diagnostics.Module)AccessTools.PropertyGetter(type, "Instance").Invoke(null, null);
+        }
     }
 }
