@@ -90,7 +90,7 @@ namespace Mistaken.VotingSystem.FriendlyFire
                 PluginHandler.AtksModule.OnDisable();
 
             var players = RealPlayers.List.Count();
-            if ((PlayersVoted.Count - (players / 2)) < 0)
+            if ((PlayersVoted.Count - (players / 2f)) < 0)
             {
                 if (PluginHandler.AtksModule is not null)
                     PluginHandler.AtksModule.OnEnable();
