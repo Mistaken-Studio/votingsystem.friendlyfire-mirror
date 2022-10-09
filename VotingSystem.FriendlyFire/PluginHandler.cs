@@ -35,7 +35,7 @@ namespace Mistaken.VotingSystem.FriendlyFire
         {
             Instance = this;
 
-            harmony = new HarmonyLib.Harmony("com.votingsystem.friendlyfire.patch");
+            harmony = new Harmony("com.votingsystem.friendlyfire.patch");
             harmony.PatchAll();
 
             Mistaken.Events.Handlers.CustomEvents.LoadedPlugins += this.CustomEvents_LoadedPlugins;
@@ -62,7 +62,7 @@ namespace Mistaken.VotingSystem.FriendlyFire
 
         internal static Mistaken.API.Diagnostics.Module AtksModule { get; private set; }
 
-        private static HarmonyLib.Harmony harmony;
+        private static Harmony harmony;
 
         private void CustomEvents_LoadedPlugins()
         {
