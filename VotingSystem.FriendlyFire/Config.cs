@@ -6,6 +6,7 @@
 
 using System.ComponentModel;
 using Exiled.API.Interfaces;
+using Mistaken.Updater.API.Config;
 
 namespace Mistaken.VotingSystem.FriendlyFire
 {
@@ -20,5 +21,10 @@ namespace Mistaken.VotingSystem.FriendlyFire
         public string AnalyticsLogin { get; set; }
 
         public string AnalyticsPassword { get; set; }
+
+        [Description("AutoUpdate settings")]
+        public SourceType SourceType { get; set; } = SourceType.DISABLED;
+
+        public string Url { get; set; } = string.Empty;
     }
 }
