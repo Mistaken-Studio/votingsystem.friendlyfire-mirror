@@ -51,9 +51,9 @@ namespace Mistaken.VotingSystem.FriendlyFire
             Exiled.Events.Handlers.Player.Hurting -= this.Player_Hurting;
         }
 
-        private static readonly List<Player> PlayersVoted = new();
+        private static readonly List<Player> PlayersVoted = new ();
 
-        private static readonly HttpClient HttpClient = new();
+        private static readonly HttpClient HttpClient = new ();
 
         private static bool friendlyFireEnabled = true;
 

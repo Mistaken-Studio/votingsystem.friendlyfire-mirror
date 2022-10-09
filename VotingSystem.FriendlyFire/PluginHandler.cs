@@ -23,19 +23,19 @@ namespace Mistaken.VotingSystem.FriendlyFire
 
         public override PluginPriority Priority => PluginPriority.Default;
 
-        public override Version RequiredExiledVersion => new(5, 2, 2);
+        public override Version RequiredExiledVersion => new (5, 2, 2);
 
-        public AutoUpdateConfig AutoUpdateConfig => new()
+        public AutoUpdateConfig AutoUpdateConfig => new ()
         {
-            Type = this.Config.SourceType,
-            Url = this.Config.Url,
+            Type = SourceType.GITLAB,
+            Url = "https://git.mistaken.pl/api/v4/projects/115",
         };
 
         public override void OnEnabled()
         {
             Instance = this;
 
-            harmony = new Harmony("com.votingsystem.friendlyfire.patch");
+            harmony = new HarmonyLib.Harmony("com.votingsystem.friendlyfire.patch");
             harmony.PatchAll();
 
             Mistaken.Events.Handlers.CustomEvents.LoadedPlugins += this.CustomEvents_LoadedPlugins;
@@ -62,7 +62,7 @@ namespace Mistaken.VotingSystem.FriendlyFire
 
         internal static Mistaken.API.Diagnostics.Module AtksModule { get; private set; }
 
-        private static Harmony harmony;
+        private static HarmonyLib.Harmony harmony;
 
         private void CustomEvents_LoadedPlugins()
         {
