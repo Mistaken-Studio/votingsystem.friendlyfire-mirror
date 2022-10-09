@@ -23,9 +23,9 @@ namespace Mistaken.VotingSystem.FriendlyFire
 
         public override PluginPriority Priority => PluginPriority.Default;
 
-        public override Version RequiredExiledVersion => new (5, 2, 2);
+        public override Version RequiredExiledVersion => new(5, 2, 2);
 
-        public AutoUpdateConfig AutoUpdateConfig => new ()
+        public AutoUpdateConfig AutoUpdateConfig => new()
         {
             Type = SourceType.GITLAB,
             Url = "https://git.mistaken.pl/api/v4/projects/115",
