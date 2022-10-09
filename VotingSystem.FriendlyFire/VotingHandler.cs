@@ -88,8 +88,13 @@ namespace Mistaken.VotingSystem.FriendlyFire
 
         private void Server_RoundStarted()
         {
-            foreach (var player in RealPlayers.List.ToArray())
-                player.SetGUI("FriendlyFire-InfoVoted", PseudoGUIPosition.MIDDLE, null);
+            static void RemoveVotingInfo()
+            {
+                foreach (var player in RealPlayers.List.ToArray())
+                    player.SetGUI("FriendlyFire-InfoVoted", PseudoGUIPosition.MIDDLE, null);
+            }
+
+            this.CallDelayed(0.5f, RemoveVotingInfo, nameof(RemoveVotingInfo));
 
             if (PluginHandler.AtksModule is not null)
                 PluginHandler.AtksModule.OnDisable();
