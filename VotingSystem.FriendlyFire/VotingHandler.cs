@@ -88,6 +88,9 @@ namespace Mistaken.VotingSystem.FriendlyFire
 
         private void Server_RoundStarted()
         {
+            foreach (var player in RealPlayers.List.ToArray())
+                player.SetGUI("FriendlyFire-InfoVoted", PseudoGUIPosition.MIDDLE, null);
+
             if (PluginHandler.AtksModule is not null)
                 PluginHandler.AtksModule.OnDisable();
 
@@ -164,7 +167,7 @@ namespace Mistaken.VotingSystem.FriendlyFire
                 return;
             }
 
-            ev.Player.SetGUI("FriendlyFire-InfoVoted", PseudoGUIPosition.MIDDLE, "<br><br><br><br><br><br><br>" + PluginHandler.Instance.Translation.PlayerVerifiedVotingInfo, 5);
+            ev.Player.SetGUI("FriendlyFire-InfoVoted", PseudoGUIPosition.MIDDLE, "<br><br><br><br><br><br><br>" + PluginHandler.Instance.Translation.PlayerVerifiedVotingInfo);
         }
     }
 }
