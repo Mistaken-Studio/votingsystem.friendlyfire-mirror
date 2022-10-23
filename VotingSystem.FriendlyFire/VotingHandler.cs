@@ -79,7 +79,8 @@ namespace Mistaken.VotingSystem.FriendlyFire
                 return;
             }
 
-            var toSend = $"{{\"isOn\":{friendlyFireEnabled.ToString().ToLower()},\"onlinePlayers\":{players},\"votePlayers\":{PlayersVoted.Count}}}";
+            // var toSend = $"{{\"isOn\":{friendlyFireEnabled.ToString().ToLower()},\"onlinePlayers\":{players},\"votePlayers\":{PlayersVoted.Count}}}";
+            var toSend = $"{{\"isOn\":{friendlyFireEnabled.ToString().ToLower()},\"onlinePlayers\":{players},\"votePlayers\":{players - PlayersVoted.Count}}}";
             var content = new StringContent(toSend, Encoding.UTF8, "application/json");
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             var response = await HttpClient.PostAsync("https://new-api.mistaken.pl/scpsl/friendlyFireStats", content);
@@ -96,11 +97,12 @@ namespace Mistaken.VotingSystem.FriendlyFire
 
             this.CallDelayed(0.5f, RemoveVotingInfo, nameof(RemoveVotingInfo));
 
+            var players = RealPlayers.List.Count();
+
             if (PluginHandler.AtksModule is not null)
                 PluginHandler.AtksModule.OnDisable();
 
-            var players = RealPlayers.List.Count();
-            if ((PlayersVoted.Count - (players / 2f)) < 0)
+            /*if ((PlayersVoted.Count - (players / 2f)) < 0)
             {
                 if (PluginHandler.AtksModule is not null)
                     PluginHandler.AtksModule.OnEnable();
@@ -114,7 +116,23 @@ namespace Mistaken.VotingSystem.FriendlyFire
             friendlyFireEnabled = false;
             Task.Run(async () => await SendAnalytics(players));
             Map.Broadcast(10, PluginHandler.Instance.Translation.RoundStartedFriendlyFireDisabledInfo);
-            Exiled.Events.Handlers.Player.Hurting += this.Player_Hurting;
+            Exiled.Events.Handlers.Player.Hurting += this.Player_Hurting;*/
+
+            if ((PlayersVoted.Count - (players / 2f)) < 0)
+            {
+                friendlyFireEnabled = false;
+                Task.Run(async () => await SendAnalytics(players));
+                Map.Broadcast(10, PluginHandler.Instance.Translation.RoundStartedFriendlyFireDisabledInfo);
+                Exiled.Events.Handlers.Player.Hurting += this.Player_Hurting;
+                return;
+            }
+
+            if (PluginHandler.AtksModule is not null)
+                PluginHandler.AtksModule.OnEnable();
+
+            friendlyFireEnabled = true;
+            Task.Run(async () => await SendAnalytics(players));
+            Map.Broadcast(10, PluginHandler.Instance.Translation.RoundStartedFriendlyFireEnabledInfo);
         }
 
         private void Player_Hurting(Exiled.Events.EventArgs.HurtingEventArgs ev)
